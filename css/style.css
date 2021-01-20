@@ -1,0 +1,106 @@
+*{
+    box-sizing: border-box;
+}
+body {
+}
+
+.main-container {
+    width: 500px;
+    margin: auto;
+    margin-top: 200px;
+}
+
+.timer{
+    width: 100px;
+    margin: 10px auto;
+    text-align: center;
+}
+
+.smiley {
+    width: 50px;
+    height: 50px;
+    font-size: 25px;
+    margin: auto;
+    display: block;
+}
+
+.board {
+    border: 2px solid black;
+    border-collapse: collapse;
+    margin: 20px auto;
+}
+
+td {
+    border: 2px solid black;
+    width: 30px;
+    height: 30px;
+}
+
+.difficulty{
+    margin: 20px auto;
+    width:265px;
+}
+
+.difficulty button{
+    width:65px;
+    margin: auto 10px;
+}
+
+.exploded {
+    background-color: red;
+}
+
+.hidden-cell {
+    background-color: orange;
+}
+
+.boom {
+    color: red;
+    font-size: 50px;
+}
+
+
+.hidden-modal {
+    display: none;
+}
+
+.marked {
+    background-color: chartreuse;
+}
+
+.levels {
+}
+
+.lives {
+    margin: 20px;
+    text-align: center;
+}
+
+
+/* numbers */
+.numbers {
+}
+
+.number1 {
+}
+
+.number2 {
+}
+
+.number3 {
+}
+
+.number4 {
+}
+
+.number5 {
+}
+
+.number6 {
+}
+
+.number7 {
+}
+
+.number8 {
+}

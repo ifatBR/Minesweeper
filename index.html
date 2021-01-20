@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Mineweeper</title>
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+    <body onload="initGame()">
+        <div class="main-container">
+            <div class="timer">000</div>
+            <button class="smiley" onclick="initGame()"></button>
+            <div class="difficulty">
+                <button class="levels" onclick="changeLevel(0)">Beginner</button>
+                <button class="levels" onclick="changeLevel(1)">Medium</button>
+                <button class="levels" onclick="changeLevel(2)">Expert</button>
+            </div>
+            <div>
+                <table class="board">
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="lives"><span>3</span> Lives left</div>
+            <div class="boom hidden-modal">
+                <h3>BOOM!!!</h3>
+            </div>
+        </div>
+        <script src="js/functions.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>
