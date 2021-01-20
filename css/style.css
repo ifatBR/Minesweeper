@@ -38,19 +38,38 @@ td {
 
 .difficulty{
     margin: 20px auto;
-    width:265px;
+    width:235px;
 }
 
 .difficulty button{
     width:65px;
-    margin: auto 10px;
 }
 
+ul{
+    padding:0;
+}
+
+li{
+    display:inline-block;
+    list-style: none;
+    margin: auto 5px;
+}
+
+.hints{
+    width: 140px;
+    margin: auto;    
+}
+
+.hints button{
+    background-color: white;
+    border:none;
+    font-size: 20px;
+}
 .exploded {
     background-color: red;
 }
 
-.hidden-cell {
+.closed-cell {/*Change to closed-cell/unrevealed-cell*/
     background-color: orange;
 }
 
@@ -60,8 +79,16 @@ td {
 }
 
 
-.hidden-modal {
+.hidden-modal {/*after changing hidden-cell name change to /hidden*/
     display: none;
+}
+
+.invisible{
+    visibility: hidden;
+}
+
+.highligt-text{
+    text-shadow: 1px 1px 8px rgb(70, 113, 179);
 }
 
 .marked {

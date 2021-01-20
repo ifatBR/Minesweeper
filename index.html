@@ -11,9 +11,11 @@
             <div class="timer">000</div>
             <button class="smiley" onclick="initGame()"></button>
             <div class="difficulty">
-                <button class="levels" onclick="changeLevel(0)">Beginner</button>
-                <button class="levels" onclick="changeLevel(1)">Medium</button>
-                <button class="levels" onclick="changeLevel(2)">Expert</button>
+                <ul>
+                <li><button class="levels" onclick="changeLevel(0)">Beginner</button></li>
+                <li> <button class="levels" onclick="changeLevel(1)">Medium</button></li>
+                <li><button class="levels" onclick="changeLevel(2)">Expert</button></li>
+            </ul>
             </div>
             <div>
                 <table class="board">
@@ -21,12 +23,20 @@
                 </table>
             </div>
 
-            <div class="lives"><span>3</span> Lives left</div>
+            <div class="lives"><span>1</span> Lives left</div>
+            <div class="hints">
+                <ul>
+                    <li><button class="hint hint1" onclick="showHint(this)">❔</button></li>
+                    <li><button class="hint hint2" onclick="showHint(this)">❔</button></li>
+                    <li><button class="hint hint3" onclick="showHint(this)">❔</button></li>
+                </ul>
+            </div>
             <div class="boom hidden-modal">
                 <h3>BOOM!!!</h3>
             </div>
         </div>
         <script src="js/functions.js"></script>
         <script src="js/main.js"></script>
+        <script src="js/bonuses.js"></script>
     </body>
 </html>

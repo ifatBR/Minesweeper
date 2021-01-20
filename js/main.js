@@ -2,11 +2,10 @@
 
 const MINE = '@';
 const EMPTY = '';
-const LIVES = 3;
 
 var gBoard;
 var gGame;
-var gLevel = { size: 4, mines: 2 };
+var gLevel = { size: 4, mines: 2, lives: 1 };
 var gTimerInterval;
 
 //TODO- Further tasks:
@@ -28,20 +27,26 @@ function initGame() {
     //ToDO: calls render board V
     //TODO: reset timer in DOM. V
     //TODO: reset gGame: isOn=true, shownCount=0, markedCount=0,secsPassed=0; V
+
+    // console.log('gLevel.lives', gLevel.lives);
     gGame = {
         isOn: true,
         shownCount: 0,
         markedCount: 0,
         secsPassed: 0,
-        lives: LIVES,
+        lives: gLevel.lives,
+        isShowHint: false,
     };
 
+    // console.log('gGame.lives', gGame.lives);
     clearInterval(gTimerInterval);
     gTimerInterval = null;
 
     gBoard = buildBoard();
     renderBoard(gBoard);
     resetTimer();
+    updateLives();
+    resetHints();
     var elSmiley = document.querySelector('.smiley');
     elSmiley.innerText = '🙂';
 }
@@ -207,7 +212,7 @@ function renderBoard(board) {
         strHtml += '<tr>\n';
         for (var j = 0; j < gLevel.size; j++) {
             var cellContent = 'H'; //later change to empty string and picture- ''    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            var cellClasses = 'hidden-cell ';
+            var cellClasses = 'closed-cell ';
             strHtml += `\t<td class="${cellClasses}" onclick="cellClicked(this, ${i}, ${j})" oncontextmenu="cellMarked(this, event, ${i}, ${j})" data-i="${i}" data-j="${j}">${cellContent}</td>\n`;
         }
         strHtml += '</tr>\n';
@@ -227,18 +232,20 @@ function cellClicked(elCell, i, j) {
     //TODO: update gGame properties  V
     var currCell = gBoard[i][j];
     if (!gGame.isOn) return;
+    
     if (gGame.shownCount === 0 && !gTimerInterval) {
         firstCellClickedActions(i, j);
     }
 
+    if (gGame.isShowHint) {
+        revealHintCells(i, j);
+        return;
+    }
+
     if (currCell.isMarked || currCell.isShown) return;
 
-    
-    currCell.isShown = true;
     // console.log('gBoard[i][j]',gBoard[i][j]);
-    var cellContent = returnCellContent(i, j);
-    elCell.innerText = cellContent;
-    elCell.classList.remove('hidden-cell');
+    revealCell(elCell, i, j);
 
     if (currCell.isMine) {
         mineStepped(elCell, i, j);
@@ -258,52 +265,60 @@ function firstCellClickedActions(i, j) {
     gBoard = setMinesNegsCount(gBoard);
 }
 
+function revealCell(elCell, i, j) {
+    gBoard[i][j].isShown = true;
+    var cellContent = returnCellContent(i, j);
+    elCell.innerText = cellContent;
+    elCell.classList.remove('closed-cell');
+}
+
 function mineStepped(elCell, i, j) {
     gGame.lives--;
 
     elCell.classList.add('exploded');
-    checkLives(elCell, i, j);
-    showBoomModal();
+    var isMoreLives = checkLives(elCell, i, j);
+    showBoomModal(isMoreLives);
 
-    var elLives = document.querySelector('.lives span');
-    elLives.innerText = gGame.lives;
-
-    
+    updateLives();
 }
 
 function checkLives(elCell, i, j) {
-    if(gLevel.mines === LIVES-gGame.lives) gameOver('🤕');
-
-    if (gGame.lives === 0) explodeAllMines(elCell, i, j);
+    if (gLevel.mines === gLevel.lives - gGame.lives) {
+        gameOver('🤕');
+        return false;
+    } else if (!gGame.lives) {
+        explodeAllMines(elCell, i, j);
+        return false;
+    }
+    return true;
 }
 
 //CSS!!!!!
-function showBoomModal() {
+function showBoomModal(isMoreLives) {
     gGame.isOn = false;
     var elBoom = document.querySelector('.boom');
     elBoom.classList.remove('hidden-modal');
-    setTimeout(hideBoomModal, 1000, elBoom);
+    setTimeout(hideBoomModal, 1000, elBoom, isMoreLives);
 }
 
-function hideBoomModal(elBoom) {
-    if (gGame.lives) gGame.isOn = true;
-
+function hideBoomModal(elBoom, isMoreLives) {
+    gGame.isOn = isMoreLives;
     elBoom.classList.add('hidden-modal');
 }
-// some TODO LATER!!!!! & possible efficiency upgrade
-function explodeAllMines(elCell, i, j) {
-    // !!!!!!!Some updates later
+
+// V possible efficiency upgrade
+function explodeAllMines() {
     //TODO: set game.isOn = false V
     //TODO: reveal all mines on the board V
     //TODO: mark the one that was clicked. V
     //TODO: Stop timerInterval V
-    //TODO Later: kill the smiley.---------TODO Later  !!!!!!!!!!!!!!!!!!!!!!
+    //TODO Later: kill the smiley. V
 
     var elMines = document.querySelectorAll('.mine');
     // console.log('elMines', elMines);
     for (var i = 0; i < elMines.length; i++) {
         var elMine = elMines[i];
-        elMine.classList.remove('hidden-cell', 'marked');
+        elMine.classList.remove('closed-cell', 'marked');
         elMine.innerText = MINE;
         var mineI = elMine.dataset.i; // check if can make it in a different way !!!!!!!!!!!!!!
         var mineJ = elMine.dataset.j; // check if can make it in a different way !!!!!!!!!!!!!!
@@ -329,13 +344,13 @@ function cellMarked(elCell, event, i, j) {
     checkGameOver();
 }
 
-// some TODO LATER !!!!!!!!!!!!!!!!!
+// V
 function checkGameOver() {
     // TODO: check if gGame.shownCount === gLevel.Size-gLevel.Mines  V
     //TODO: if yes- set game.isOn = false; V
-    //TODO Later: set smiley to happy
+    //TODO Later: set smiley to happy V
     var isAllCellsShown = gGame.shownCount === gLevel.size ** 2 - gLevel.mines;
-    var livesUsed = (LIVES-gGame.lives);
+    var livesUsed = gLevel.lives - gGame.lives;
     var isAllMinesMarked = gGame.markedCount + livesUsed === gLevel.mines;
 
     // console.log('game shown Count',gGame.shownCount)
@@ -389,7 +404,7 @@ function expandShown(cellI, cellJ) {
             var cellContent = returnCellContent(i, j);
             var elCurrCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`);
             elCurrCell.innerText = cellContent;
-            elCurrCell.classList.remove('hidden-cell');
+            elCurrCell.classList.remove('closed-cell');
 
             // console.log('cell',i,'-',j,'content:',cellContent);
             // console.log('elCurrCell',elCurrCell);
@@ -403,9 +418,9 @@ function expandShown(cellI, cellJ) {
 // V
 function changeLevel(lvlIdx) {
     var levels = [
-        { size: 4, mines: 2 },
-        { size: 8, mines: 12 },
-        { size: 12, mines: 30 },
+        { size: 4, mines: 2, lives: 1 },
+        { size: 8, mines: 12, lives: 3 },
+        { size: 12, mines: 30, lives: 3 },
     ];
     gLevel = levels[lvlIdx];
     console.log('chose level', gLevel);
@@ -423,4 +438,9 @@ function returnCellContent(i, j) {
 function renderMineCell(i, j) {
     var elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`);
     elCell.classList.add('mine');
+}
+
+function updateLives() {
+    var elLives = document.querySelector('.lives span');
+    elLives.innerText = gGame.lives;
 }
