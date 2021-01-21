@@ -8,28 +8,29 @@ body {
     background-image: url('../img/ice-background.jpg');
     background-repeat: no-repeat;
     background-size: 100%;
-
 }
 
 .main-container {
     width: 1000px;
     margin: 0 auto;
-
 }
 
-.extras-area, .board-area {
+.extras-area,
+.board-area {
     display: inline-block;
-    margin-left: 30px;
+    height: 350px;
 }
-
+.board-area {
+    width: 400px;
+}
 .menu {
-    background-image: linear-gradient(-40deg, rgba(132, 175, 219, 0.8), rgba(206, 231, 255, 0.4));
+    background-image: linear-gradient(-40deg, rgba(197, 223, 248, 0.8), rgba(206, 231, 255, 0.4));
     width: 300px;
     height: 350px;
     position: relative;
-    top: 270px; 
+    top: 280px;
     right: 50px;
-    border-radius: 5px;
+    border-radius: 10px;
     box-shadow: 0 0 20px 7px white;
 }
 
@@ -38,7 +39,7 @@ body {
     margin: 10px auto;
     text-align: center;
     font-family: 'Architects Daughter', cursive;
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .smiley {
@@ -58,7 +59,6 @@ body {
 
 .win-smiley {
     background-image: url('../img/happy face.png');
-    /* background-color: rgba(173, 220, 238, 0.555); */
     background-color: rgba(253, 218, 121, 0.555);
 }
 
@@ -69,7 +69,7 @@ body {
 
 .smiley:active {
     background-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 5px 5px rgb(124, 179, 255, 0.5) inset, -2px -2px rgb(124, 179, 255, 0.5) inset,  0 0 7px 7px white;
+    box-shadow: 5px 5px rgb(124, 179, 255, 0.5) inset, -2px -2px rgb(124, 179, 255, 0.5) inset, 0 0 7px 7px white;
 }
 
 .board {
@@ -89,14 +89,11 @@ td {
 }
 
 .closed-cell {
-    /* background-color: orange; */
     background-image: linear-gradient(70deg, rgba(251, 252, 253, 0.8), rgb(124, 179, 255, 0.5));
 }
 
-td:active{
-    /* background-color:rgba(43, 81, 133, 0.842); */
+td:active {
     background-image: linear-gradient(70deg, rgba(149, 193, 236, 0.8), rgba(124, 179, 255, 0.699));
-
     box-shadow: 2px 2px 5px rgba(63, 127, 218, 0.767) inset, rgba(255, 255, 255, 0.5) 0 0 5px 5px;
 }
 
@@ -109,7 +106,7 @@ td:active{
     width: 95px;
     height: 30px;
     background-color: rgba(251, 252, 253, 0.7);
-    box-shadow: 2px 2px rgba(139, 168, 197, 0.7), 0 0 5px 5px rgba(139, 168, 197, 0.4);
+    box-shadow: 2px 2px rgba(139, 168, 197, 0.7), 0 0 5px 5px rgba(211, 233, 255, 0.4), 0 0 7px 3px rgba(255, 255, 255, 0.5) inset;
     border-radius: 3px;
     border: none;
     font-family: 'Architects Daughter', cursive;
@@ -117,8 +114,8 @@ td:active{
 }
 
 .difficulty button:active {
-    box-shadow: 4px 4px rgba(139, 168, 197, 0.7) inset, 0 0 5px 5px rgba(139, 168, 197, 0.4);
-    background-color: rgba(224, 240, 255, 0.4);
+    box-shadow: 4px 4px 5px rgba(94, 136, 175, 0.781) inset, 0 0 5px 5px rgba(211, 233, 255, 0.4);
+    background-color: rgba(224, 240, 255, 0.6);
 }
 
 ul {
@@ -139,14 +136,13 @@ button:focus {
     background-color: red;
 }
 
-
 .modals {
     position: relative;
+    left: 430px;
+    top: 250px;
 }
 .boom {
     position: absolute;
-    left: 100px;
-    top: 250px;
     color: red;
     font-size: 50px;
     font-family: 'Architects Daughter', cursive;
@@ -155,8 +151,6 @@ button:focus {
 
 .msg {
     position: absolute;
-    left: 60px;
-    top: 240px;
     text-align: center;
     width: 200px;
     color: rgb(54, 81, 107);
@@ -200,20 +194,18 @@ button:focus {
     background-color: rgba(255, 255, 255, 0.308);
 }
 
-.pressed{
+.pressed {
     box-shadow: 3px 3px rgb(124, 179, 255, 0.5) inset, 0 0 7px 7px rgba(247, 250, 98, 0.9);
     background-color: rgba(252, 221, 49, 0.308);
     font-weight: bold;
 }
 
-
-.mines-mode{
+.mines-mode {
     background-color: rgba(252, 221, 49, 0.308);
-    box-shadow:  0 0 7px 7px rgba(247, 250, 98, 0.5);
-    }
+    box-shadow: 0 0 7px 7px rgba(247, 250, 98, 0.5);
+}
 
 .hidden-modal {
-    /*after changing hidden-cell name change to /hidden*/
     display: none;
 }
 
@@ -222,7 +214,6 @@ button:focus {
 }
 
 .highligt-text {
-    /* text-shadow: 1px 1px 8px rgb(70, 113, 179); */
     text-shadow: 3px 3px 5px white, -3px -3px 5px white, 1px 1px 10px white, 1px 1px 20px white, -1px -1px 25px white;
 }
 
@@ -237,7 +228,6 @@ button:focus {
 
 .hints {
     width: 250px;
-    /* margin: auto; */
     margin-left: 30px;
     padding-top: 50px;
 
@@ -250,19 +240,13 @@ button:focus {
     font-size: 25px;
 }
 
-.hints ul,
-.lives ul {
+.hints ul, .lives ul {
     display: inline;
     margin-left: 10px;
 }
 
 .lives {
     margin: 20px;
-
-    /* text-align: center; */
-    /* position:relative;
-    right:250px;
-    bottom:50px; */
 }
 
 .live {
@@ -270,7 +254,6 @@ button:focus {
     height: 35px;
     background-image: url('../img/Snowflake.png');
     background-size: cover;
-    /* margin-top: 10px; */
 }
 
 .lable {
@@ -279,31 +262,3 @@ button:focus {
     text-shadow: 3px 3px 5px white, -3px -3px 5px white, 1px 1px 10px white, 1px 1px 20px white, -1px -1px 25px white;
     font-family: 'Architects Daughter', cursive;
 }
-
-/* numbers
-.numbers {
-}
-
-.number1 {
-}
-
-.number2 {
-}
-
-.number3 {
-}
-
-.number4 {
-}
-
-.number5 {
-}
-
-.number6 {
-}
-
-.number7 {
-}
-
-.number8 {
-} */

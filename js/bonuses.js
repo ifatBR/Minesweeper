@@ -1,31 +1,15 @@
 'use strict';
 
-var gUndos;
-//TODO- BONUSES:
-//1. Hints - 3 hints VV :)
-//when clicked:
-// a.changed color
-//b.the next hidden cell clicked - the cell and all it's negs are revealed for 1 sec
-
-//c.The hint dissappears.maybe an object with isOn and isUsed, class= .hidden after use
-
-//2. Keep best score in the local storage and present it on the page  VV :)
-
-//3.recursive expend VV :)
-
-//V
 function showHint(elHintButton) {
     if (gGame.isShowHint || !gGame.isOn) return;
     elHintButton.classList.add('highligt-text');
     elHintButton.innerText = '❓';
-    // elHintButton.classList.add('highligt-text', 'clicked-hint');
     gGame.isShowHint = true;
+    showMsgModal('Choose cell to reveal');
 }
 
 function revealHintCells(cellI, cellJ) {
-    //TODO: add a check when cell clicked- gGame.isShowHint if true  this function and return (can't have normal click action here)
-    var currCell = gBoard[cellI][cellJ];
-    if (currCell.isShown) return;
+    if (gBoard[cellI][cellJ].isShown) return;
 
     for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= gLevel.size) continue;
@@ -33,13 +17,13 @@ function revealHintCells(cellI, cellJ) {
             if (j < 0 || j >= gLevel.size) continue;
             var elCurrCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`);
             elCurrCell.classList.add('hint-cell');
+            if (gBoard[i][j].isMarked) elCurrCell.classList.remove('marked');
             revealCell(elCurrCell, i, j, false);
         }
     }
     setTimeout(hideHint, 1000);
 }
 
-// V
 function hideHint() {
     gGame.isShowHint = false;
     var elHintCells = document.querySelectorAll('.hint-cell');
@@ -55,6 +39,10 @@ function hideHint() {
 
         if (currCell.isShown) continue;
         elCurrCell.innerText = EMPTY;
+        if (currCell.isMarked) {
+            elCurrCell.classList.add('marked');
+            elCurrCell.innerText = MARKED;
+        }
         elCurrCell.classList.add('closed-cell');
     }
 
@@ -71,7 +59,6 @@ function resetHints() {
     }
 }
 
-//V
 function compareScore(newScore) {
     var currBestScore = window.localStorage.getItem(gLvlBestScore);
 
@@ -87,14 +74,14 @@ function updateBestScore() {
     elBestScore.innerText = currBestScore ? fixTimeFormat(currBestScore) : 0;
 }
 
-//V test with undos - not working yet !!!!!
 function expandShown(cellI, cellJ) {
-    var cellsOpen = [];
     var centralCell = gBoard[cellI][cellJ];
-    if (centralCell.minesAroundCount > 0) return;
+    if (centralCell.minesAroundCount > 0) return [];
 
+    var cellsOpen = [];
     for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= gLevel.size) continue;
+
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
             if (j < 0 || j >= gLevel.size) continue;
 
@@ -111,93 +98,35 @@ function expandShown(cellI, cellJ) {
 
             cellsOpen.push({ i, j });
             var cellsOpenRecurs = expandShown(i, j);
-            // console.log('cells open recurs', cellsOpenRecurs)
+            cellsOpen = cellsOpen.concat(cellsOpenRecurs);
         }
     }
-
-    return cellsOpenRecurs ? cellsOpen.concat(cellsOpenRecurs) : cellsOpen;
+    return cellsOpen;
 }
 
-//Second version - resursion works
-// function expandShown(cellI, cellJ) {
-//     var centralCell = gBoard[cellI][cellJ];
-//     if (centralCell.minesAroundCount > 0) return;
-
-//     for (var i = cellI - 1; i <= cellI + 1; i++) {
-//         if (i < 0 || i >= gLevel.size) continue;
-//         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
-//             if (j < 0 || j >= gLevel.size) continue;
-
-//             var currCell = gBoard[i][j];
-//             if (currCell.isMine || currCell.isShown || currCell.isMarked) continue;
-
-//             gGame.shownCount++;
-//             gBoard[i][j].isShown = true;
-
-//             var cellContent = returnCellContent(i, j);
-//             var elCurrCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`);
-//             elCurrCell.innerText = cellContent;
-//             elCurrCell.classList.remove('closed-cell');
-
-//             expandShown(i, j);
-//         }
-//     }
-// }
-
-//first version copy-  only 1st gn negs
-// function expandShown(cellI, cellJ) {
-//     // console.log('expand shown i,j', cellI,cellJ);
-
-//     for (var i = cellI - 1; i <= cellI + 1; i++) {
-//         if (i < 0 || i >= gLevel.size) continue;
-//         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
-//             if (j < 0 || j >= gLevel.size) continue;
-//             // console.log('i,j', i, ',', j);
-//             var currCell = gBoard[i][j];
-//             if (currCell.isMine || currCell.isShown || currCell.isMarked) continue;
-//             gGame.shownCount++;
-//             // console.log('game shown count', gGame.shownCount);
-//             // console.log(('is currcell shown', currCell.isShown));
-//             gBoard[i][j].isShown = true;
-//             // console.log(('is gBoard[i][j] shown', currCell.isShown));
-
-//             var cellContent = returnCellContent(i, j);
-//             var elCurrCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`);
-//             elCurrCell.innerText = cellContent;
-//             elCurrCell.classList.remove('closed-cell');
-
-//             // console.log('cell',i,'-',j,'content:',cellContent);
-//             // console.log('elCurrCell',elCurrCell);
-//             // console.log('----------------------------------');
-//         }
-//     }
-//     //TODO: when a user clicks an empty cell, open all it's neighboars.
-//     //***TODO Bonus: expand all empty cells connected.
-// }
-
-// not working yet !!!!!
 function undo() {
-    var lastSteps = gUndos.pop();
-    // console.log('last steps', lastSteps);
+    if (!gUndos || !gGame.isOn) return;
+    var lastSteps = gUndos[0].length ? gUndos.pop() : gUndos;
     for (var i = 0; i < lastSteps.length; i++) {
         var pos = lastSteps[i];
-        // console.log('pos', pos);
         var cell = gBoard[pos.i][pos.j];
         cell.isShown = false;
 
         var elCell = document.querySelector(`[data-i="${pos.i}"][data-j="${pos.j}"]`);
         elCell.classList.add('closed-cell');
+        if (cell.isMarked) elCell.classList.remove('marked');
+        if (cell.isMine) {
+            elCell.classList.remove('exploded');
+            gGame.lives++;
+            updateLives();
+        }
+
         elCell.innerText = '';
     }
 }
 
 function safeClick() {
-    //TODO: if first click - modal first click is always safe V
-    //TODO: find all safe cells V
-    //choose one randomly V
-    //highlight cell in yellow for 1 sec V
-    //add safe clicks count to gGame V
-    //decrease safe clicks count V
+
     if (!gGame.safeClicks || !gGame.isOn) return;
     if (!gTimerInterval) {
         showMsgModal('First Click is Always Safe');
@@ -239,7 +168,7 @@ function showMsgModal(msg) {
     var elMsg = document.querySelector('.msg');
     elMsg.innerText = msg;
     elMsg.classList.remove('hidden-modal');
-    setTimeout(hideMsgModal, 1200, elMsg);
+    setTimeout(hideMsgModal, 1500, elMsg);
 }
 
 function hideMsgModal(elMsg) {
@@ -252,45 +181,36 @@ function updateSafeClick() {
 }
 
 function manualyPlacMines(elButton) {
-    //Todo: create gManualMode{minesCount:gLevel.mines, isOn:false, positions:[]}
-    //TODO: add a condition in cellClicked() that changes first cell actions accordingly
-    //check if there are actions in it we might miss
-    //TODO: gMinesCounter = gLevel.mines;
-    //add gIsManualOn;
-    //Todo: collect the clicked positions
-    //decrease gMinesCounter
-    //when the counter ===0 continue as usual, only first click actions checks if positions.len>0 then works with the array
 
-    
-    if (gManualMode.isOn) {
-        gManualMode.isOn = false;
-        turnOffManualHighlights();
-        
+    if (gTimerInterval) return;
+
+    if (gManualMode.isOn || gManualMode.minesCount < gLevel.mines) {
+        gManualMode = resetManualMode(gManualMode);
+        showMsgModal('Manual Placement Cacelled');
         return;
     }
+
     elButton.classList.add('pressed');
     var elBoard = document.querySelector('.board');
     elBoard.classList.add('mines-mode');
     gManualMode.isOn = true;
-
-    // game.isOn = !gManualMode.isOn; will prevent cellClicked from running
-
-    //
 }
 
-function collectMinesPositions(i, j, manualMode) {
-    //TODO: add check if position already exists if so, show modal
+function collectMinesPositions(i, j) {
 
     var isExist = checkIfPosExist(i, j);
     if (isExist) return;
 
-    manualMode.minesCount--;
-    updateManualMinesCount()
-    
-    manualMode.positions.push({ i, j });
-    manualMode.isOn = manualMode.minesCount > 0;
+    gManualMode.minesCount--;
+    gManualMode = updateManualMinesCount(gManualMode);
 
-    if (!manualMode.isOn) turnOffManualHighlights();
+    gManualMode.positions.push({ i, j });
+    gManualMode.isOn = gManualMode.minesCount > 0;
+
+    if (!gManualMode.isOn) {
+        turnOffManualHighlights();
+        setTimeout(showMsgModal, 200, "Great! Let's Play!");
+    }
 }
 
 function checkIfPosExist(posI, posJ) {
@@ -309,10 +229,22 @@ function turnOffManualHighlights() {
     elButton.classList.remove('pressed');
     var elBoard = document.querySelector('.board');
     elBoard.classList.remove('mines-mode');
-    setTimeout(showMsgModal, 200, "Great! Let's Play!");
 }
 
-function updateManualMinesCount(){
+function updateManualMinesCount(manualMode) {
     var elManualButtonSpan = document.querySelector('.manual-mines span');
-    elManualButtonSpan.innerText = gManualMode.minesCount;
+    elManualButtonSpan.innerText = manualMode.minesCount;
+
+    return manualMode;
+}
+
+function resetManualMode(manualMode) {
+    manualMode = {
+        minesCount: gLevel.mines,
+        isOn: false,
+        positions: [],
+    };
+    manualMode = updateManualMinesCount(manualMode);
+    turnOffManualHighlights();
+    return manualMode;
 }
