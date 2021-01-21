@@ -8,7 +8,7 @@ var gBoard;
 var gGame;
 var gLevel = { size: 4, mines: 2, lives: 1 };
 var gTimerInterval;
-var gLvlBestScore = 0;
+var gLvlBestScoreKey = `lvl-0-BestScore`;
 var gUndos;
 var gManualMode;
 
@@ -318,7 +318,7 @@ function changeLevel(lvlIdx) {
         { size: 12, mines: 30, lives: 3 },
     ];
     gLevel = levels[lvlIdx];
-    gLvlBestScore = `lvl-${lvlIdx}-BestScore`;
+    gLvlBestScoreKey = `lvl-${lvlIdx}-BestScore`;
     initGame();
 }
 

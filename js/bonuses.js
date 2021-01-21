@@ -60,15 +60,15 @@ function resetHints() {
 }
 
 function compareScore(newScore) {
-    var currBestScore = window.localStorage.getItem(gLvlBestScore);
+    var currBestScore = window.localStorage.getItem(gLvlBestScoreKey);
 
     if (!currBestScore || newScore < currBestScore) {
-        window.localStorage.setItem(gLvlBestScore, newScore + '');
+        window.localStorage.setItem(gLvlBestScoreKey, newScore + '');
     }
 }
 
 function updateBestScore() {
-    var currBestScore = window.localStorage.getItem(gLvlBestScore);
+    var currBestScore = window.localStorage.getItem(gLvlBestScoreKey);
 
     var elBestScore = document.querySelector('.best-score span');
     elBestScore.innerText = currBestScore ? fixTimeFormat(currBestScore) : 0;
