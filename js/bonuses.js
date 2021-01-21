@@ -31,8 +31,8 @@ function hideHint() {
     for (var i = 0; i < elHintCells.length; i++) {
         var elCurrCell = elHintCells[i];
 
-        var currCellI = elCurrCell.dataset.i;
-        var currCellJ = elCurrCell.dataset.j;
+        var currCellI = +elCurrCell.dataset.i;
+        var currCellJ = +elCurrCell.dataset.j;
         var currCell = gBoard[currCellI][currCellJ];
 
         elCurrCell.classList.remove('hint-cell');
