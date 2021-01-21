@@ -8,31 +8,60 @@
     </head>
     <body onload="initGame()">
         <div class="main-container">
-            <div class="timer">000</div>
-            <button class="smiley" onclick="initGame()"></button>
-            <div class="difficulty">
-                <ul>
-                <li><button class="levels" onclick="changeLevel(0)">Beginner</button></li>
-                <li> <button class="levels" onclick="changeLevel(1)">Medium</button></li>
-                <li><button class="levels" onclick="changeLevel(2)">Expert</button></li>
-            </ul>
-            </div>
-            <div>
-                <table class="board">
-                    <tbody></tbody>
-                </table>
+            <div class="extras-area">
+                <div class="menu">
+                    <div class="hints">
+                        <h3 class="lable">Hint</h3>
+                        <ul>
+                            <li><button class="hint" onclick="showHint(this)">❔</button></li>
+                            <li><button class="hint" onclick="showHint(this)">❔</button></li>
+                            <li><button class="hint" onclick="showHint(this)">❔</button></li>
+                        </ul>
+                    </div>
+                    <div class="lives">
+                        <h3 class="lable">Lives</h3>
+                        <ul>
+                            <li class="live"></li>
+                            <li class="live"></li>
+                            <li class="live"></li>
+
+                        </ul>
+                    </div>
+
+                    <div class="extras">
+                        <button class="undo extra" onclick="undo()">Undo</button>
+                        <button class="safe-click extra" onclick="safeClick()">Safe-Clicks: <span>3</span></button>
+                    </div>
+                    <button class="manual-mines extra" onclick="manualyPlacMines(this)">Manually Place Mines: <span>2</span></button>
+                </div>
             </div>
 
-            <div class="lives"><span>1</span> Lives left</div>
-            <div class="hints">
-                <ul>
-                    <li><button class="hint hint1" onclick="showHint(this)">❔</button></li>
-                    <li><button class="hint hint2" onclick="showHint(this)">❔</button></li>
-                    <li><button class="hint hint3" onclick="showHint(this)">❔</button></li>
-                </ul>
-            </div>
-            <div class="boom hidden-modal">
-                <h3>BOOM!!!</h3>
+            <div class="board-area">
+                <div class="modals">
+                    <div class="boom hidden-modal">
+                        <h3>BOOM!!!</h3>
+                    </div>
+
+                    <!-- <div class="safe hidden-modal"> -->
+                    <div class="msg hidden-modal">
+                        <h3>First Click is Always Safe</h3>
+                    </div>
+                </div>
+                <div class="time timer">Time: <span>000</span></div>
+                <div class="time best-score">Best Score: <span>000</span></div>
+                <button class="smiley" onclick="initGame()"></button>
+                <div class="difficulty">
+                    <ul>
+                        <li><button class="levels" onclick="changeLevel(0)">Beginner</button></li>
+                        <li><button class="levels" onclick="changeLevel(1)">Medium</button></li>
+                        <li><button class="levels" onclick="changeLevel(2)">Expert</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <table class="board">
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <script src="js/functions.js"></script>
