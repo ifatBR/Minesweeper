@@ -2,7 +2,8 @@
 
 function showHint(elHintButton) {
     if (gGame.isShowHint || !gGame.isOn) return;
-    playSound('../sounds/ding.wav')
+    // playSound('../sounds/ding.wav')
+    playSound('ding-sound');
     elHintButton.classList.add('highligt-text');
     elHintButton.innerText = '❓';
     gGame.isShowHint = true;
@@ -22,7 +23,8 @@ function revealHintCells(cellI, cellJ) {
             revealCell(elCurrCell, i, j, false);
         }
     }
-    playSound('../sounds/magic2.mp3')
+    // playSound('../sounds/magic2.mp3');
+    playSound('magic2-sound');
 
     setTimeout(hideHint, 1000);
 }
@@ -93,7 +95,7 @@ function expandShown(cellI, cellJ) {
 
             gGame.shownCount++;
             var elCurrCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`);
-            revealCell(elCurrCell, i, j, true)
+            revealCell(elCurrCell, i, j, true);
 
             cellsOpen.push({ i, j });
             var cellsOpenRecurs = expandShown(i, j);
@@ -105,7 +107,8 @@ function expandShown(cellI, cellJ) {
 
 function undo() {
     if (!gUndos || !gGame.isOn) return;
-    playSound('../sounds/swoosh.wav')
+    // playSound('../sounds/swoosh.wav');
+    playSound('woosh-sound');
     var lastSteps = gUndos[0].length ? gUndos.pop() : gUndos;
     for (var i = 0; i < lastSteps.length; i++) {
         var pos = lastSteps[i];
@@ -132,7 +135,8 @@ function safeClick() {
         return;
     }
 
-    playSound('../sounds/magic.wav');
+    // playSound('../sounds/magic.wav');
+    playSound('magic-sound');
     gGame.isOn = false;
     gGame.safeClicks--;
     updateSafeClick();
@@ -182,14 +186,16 @@ function updateSafeClick() {
 
 function manualyPlacMines(elButton) {
     if (gTimerInterval || !gGame.isOn) return;
-    
-    playSound('../sounds/click.wav');
+
+    // playSound('../sounds/click.wav');
+    playSound('click-sound');
+
     if (gManualMode.isOn || gManualMode.minesCount < gLevel.mines) {
         gManualMode = resetManualMode(gLevel);
         showMsgModal('Manual Placement Cacelled');
         return;
     }
-    
+
     elButton.classList.add('pressed');
     var elBoard = document.querySelector('.board');
     elBoard.classList.add('mines-mode');
@@ -200,7 +206,8 @@ function collectMinesPositions(i, j) {
     var isExist = checkIfPosExist(i, j);
     if (isExist) return;
 
-    playSound('../sounds/boop.wav')
+    // playSound('../sounds/boop.wav');
+    playSound('boop-sound');
 
     gManualMode.minesCount--;
     gManualMode = updateManualMinesButton(gManualMode);
@@ -250,5 +257,3 @@ function resetManualMode(level) {
     turnOffManualHighlights();
     return manualMode;
 }
-
-
