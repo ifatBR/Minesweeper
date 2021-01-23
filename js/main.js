@@ -11,10 +11,9 @@ var gTimerInterval;
 var gLvlBestScoreKey = `lvl-0-BestScore`;
 var gUndos;
 var gManualMode;
-
+var gSoundOn = true;
 
 function initGame() {
-
     gGame = {
         isOn: true,
         shownCount: 0,
@@ -25,7 +24,7 @@ function initGame() {
         safeClicks: 3,
     };
 
-    gManualMode = resetManualMode(gManualMode);
+    gManualMode = resetManualMode(gLevel);
 
     gUndos = [];
     clearInterval(gTimerInterval);
@@ -40,12 +39,9 @@ function initGame() {
     updateSafeClick();
     resetHints();
     resetSmiley();
-    
-
 }
 
 function buildBoard() {
-
     var board = [];
     for (var i = 0; i < gLevel.size; i++) {
         board.push([]);
@@ -114,17 +110,16 @@ function getFirstCellClearanceIdxs(cellI, cellJ) {
 }
 
 function setMinesNegsCount(board) {
-
     for (var i = 0; i < gLevel.size; i++) {
         for (var j = 0; j < gLevel.size; j++) {
             if (board[i][j].isMine) continue;
-            board[i][j].minesAroundCount = countMines(board, i, j);
+            board[i][j].minesAroundCount = countMinesAround(board, i, j);
         }
     }
     return board;
 }
 
-function countMines(board, cellI, cellJ) {
+function countMinesAround(board, cellI, cellJ) {
     var minesCount = 0;
     for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= gLevel.size) continue;
@@ -154,9 +149,6 @@ function renderBoard() {
 }
 
 function cellClicked(elCell, i, j) {
-    var currCell = gBoard[i][j];
-    elCell.classList.add('clicked');
-
     if (!gGame.isOn) return;
 
     if (gManualMode.isOn) {
@@ -173,6 +165,7 @@ function cellClicked(elCell, i, j) {
         return;
     }
 
+    var currCell = gBoard[i][j];
     if (currCell.isMarked || currCell.isShown) return;
 
     revealCell(elCell, i, j, true);
@@ -181,6 +174,8 @@ function cellClicked(elCell, i, j) {
     if (currCell.isMine) {
         mineClicked(elCell, i, j);
     } else {
+        playSound('../sounds/pop.mp3');
+
         gGame.shownCount++;
 
         if (currCell.minesAroundCount === 0) {
@@ -209,10 +204,12 @@ function revealCell(elCell, i, j, isChangeStat) {
 }
 
 function mineClicked(elCell, i, j) {
+    playSound('../sounds/boom4.wav');
+
     looseLife();
     elCell.classList.add('exploded');
     var isMoreLives = checkLives(elCell, i, j);
-    showBoomModal(isMoreLives);
+    showBoomEffect(isMoreLives);
 }
 
 function checkLives(elCell, i, j) {
@@ -224,17 +221,17 @@ function checkLives(elCell, i, j) {
     return true;
 }
 
-function showBoomModal(isMoreLives) {
+function showBoomEffect(isMoreLives) {
     gGame.isOn = false;
-    var elBoom = document.querySelector('.boom');
-    elBoom.classList.remove('hidden-modal');
-    gGame.isOn = isMoreLives;
 
-    setTimeout(hideBoomModal, 500, elBoom);
+    var elBoard = document.querySelector('.board');
+    elBoard.classList.add('explosion');
+    setTimeout(hideBoomEffect, 1100, elBoard, isMoreLives);
 }
 
-function hideBoomModal(elBoom, isMoreLives) {
-    elBoom.classList.add('hidden-modal');
+function hideBoomEffect(elBoard, isMoreLives) {
+    elBoard.classList.remove('explosion');
+    gGame.isOn = isMoreLives;
 }
 
 function explodeAllMines() {
@@ -255,10 +252,12 @@ function explodeAllMines() {
 function cellMarked(elCell, event, i, j) {
     event.preventDefault();
     var currCell = gBoard[i][j];
-    if (gManualMode.isOn || currCell.isShown) return;
+    if (gManualMode.isOn || currCell.isShown || !gGame.isOn) return;
 
+    playSound('../sounds/pop2.wav');
     gUndos.push([{ i, j }]);
     if (!gTimerInterval) firstCellClickedActions(i, j);
+
     currCell.isMarked = !currCell.isMarked;
     elCell.classList.toggle('marked');
     gGame.markedCount = currCell.isMarked ? ++gGame.markedCount : --gGame.markedCount;
@@ -267,7 +266,6 @@ function cellMarked(elCell, event, i, j) {
 }
 
 function checkGameOver() {
-
     var isAllCellsShown = gGame.shownCount === gLevel.size ** 2 - gLevel.mines;
     var livesUsed = gLevel.lives - gGame.lives;
     var isAllMinesMarked = gGame.markedCount + livesUsed === gLevel.mines;
@@ -279,11 +277,13 @@ function checkGameOver() {
 }
 
 function gameOver(isWin) {
-
-    var chosenClass = isWin ? 'win-smiley' : 'loose-smiley';
+    var gameOverClass = isWin ? 'win-smiley' : 'loose-smiley';
+    var gameOverSound = '../sounds/';
+    gameOverSound += isWin ? 'yes.wav' : 'looser.wav';
+    setTimeout(playSound, 600, gameOverSound);
 
     var elSmiley = document.querySelector('.smiley');
-    elSmiley.classList.add(chosenClass);
+    elSmiley.classList.add(gameOverClass);
     gGame.isOn = false;
     clearInterval(gTimerInterval);
     gTimerInterval = null;
@@ -297,7 +297,6 @@ function resetTimer() {
 }
 
 function runTimer() {
-   
     var currTime = fixTimeFormat(++gGame.secsPassed);
 
     var elTimer = document.querySelector('.timer span');
@@ -305,7 +304,7 @@ function runTimer() {
 }
 
 function fixTimeFormat(time) {
-    if (!time) return 0;
+    if (!time) return '000';
     if (time < 100) time = '0' + time;
     if (time < 10) time = '0' + time;
     return time;
@@ -319,6 +318,7 @@ function changeLevel(lvlIdx) {
     ];
     gLevel = levels[lvlIdx];
     gLvlBestScoreKey = `lvl-${lvlIdx}-BestScore`;
+    playSound('../sounds/rattle.wav');
     initGame();
 }
 
@@ -340,8 +340,8 @@ function looseLife() {
     var elLivesLi = elLives.querySelectorAll('.live');
     var elLivesLiInvis = elLives.querySelectorAll('.invisible');
 
-    var invisibleCount = elLivesLiInvis.length;
-    elLivesLi[invisibleCount].classList.add('invisible');
+    var lastLiveIdx = elLivesLi.length - 1 - elLivesLiInvis.length;
+    elLivesLi[lastLiveIdx].classList.add('invisible');
 }
 
 function updateLives() {
@@ -360,3 +360,43 @@ function resetSmiley() {
     var elSmiley = document.querySelector('.smiley');
     elSmiley.classList.remove('win-smiley', 'loose-smiley');
 }
+
+function playSound(sound) {
+    if (!gSoundOn) return;
+    var aud = new Audio(sound);
+    aud.play();
+}
+
+function stopSound(sound) {
+    sound.pause();
+    sound.currentTime = 0;
+}
+
+function gameSoundToggle(elButton) {
+    var aud = new Audio('../sounds/click.wav');
+    aud.play();
+
+    elButton.classList.toggle('sound-off');
+    gSoundOn = !gSoundOn;
+}
+
+function restartGame() {
+    playSound('../sounds/rattle.wav');
+
+    initGame();
+}
+
+function showInstructions(){
+    playSound('../sounds/click.wav');
+
+    var elInstructions = document.querySelector('.instructions');
+    elInstructions.classList.remove('hidden-modal');
+}
+
+function hideInstructions(){
+    playSound('../sounds/click.wav');
+
+    var elInstructions = document.querySelector('.instructions');
+    elInstructions.classList.add('hidden-modal');
+}
+

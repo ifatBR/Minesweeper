@@ -2,6 +2,7 @@
 
 function showHint(elHintButton) {
     if (gGame.isShowHint || !gGame.isOn) return;
+    playSound('../sounds/ding.wav')
     elHintButton.classList.add('highligt-text');
     elHintButton.innerText = '❓';
     gGame.isShowHint = true;
@@ -21,6 +22,8 @@ function revealHintCells(cellI, cellJ) {
             revealCell(elCurrCell, i, j, false);
         }
     }
+    playSound('../sounds/magic2.mp3')
+
     setTimeout(hideHint, 1000);
 }
 
@@ -75,8 +78,8 @@ function updateBestScore() {
 }
 
 function expandShown(cellI, cellJ) {
-    var centralCell = gBoard[cellI][cellJ];
-    if (centralCell.minesAroundCount > 0) return [];
+    var clickedCell = gBoard[cellI][cellJ];
+    if (clickedCell.minesAroundCount > 0) return [];
 
     var cellsOpen = [];
     for (var i = cellI - 1; i <= cellI + 1; i++) {
@@ -89,12 +92,8 @@ function expandShown(cellI, cellJ) {
             if (currCell.isMine || currCell.isShown || currCell.isMarked) continue;
 
             gGame.shownCount++;
-            gBoard[i][j].isShown = true;
-
-            var cellContent = returnCellContent(i, j);
             var elCurrCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`);
-            elCurrCell.innerText = cellContent;
-            elCurrCell.classList.remove('closed-cell');
+            revealCell(elCurrCell, i, j, true)
 
             cellsOpen.push({ i, j });
             var cellsOpenRecurs = expandShown(i, j);
@@ -106,6 +105,7 @@ function expandShown(cellI, cellJ) {
 
 function undo() {
     if (!gUndos || !gGame.isOn) return;
+    playSound('../sounds/swoosh.wav')
     var lastSteps = gUndos[0].length ? gUndos.pop() : gUndos;
     for (var i = 0; i < lastSteps.length; i++) {
         var pos = lastSteps[i];
@@ -126,13 +126,13 @@ function undo() {
 }
 
 function safeClick() {
-
     if (!gGame.safeClicks || !gGame.isOn) return;
     if (!gTimerInterval) {
         showMsgModal('First Click is Always Safe');
         return;
     }
 
+    playSound('../sounds/magic.wav');
     gGame.isOn = false;
     gGame.safeClicks--;
     updateSafeClick();
@@ -181,15 +181,15 @@ function updateSafeClick() {
 }
 
 function manualyPlacMines(elButton) {
-
     if (gTimerInterval) return;
-
+    
+    playSound('../sounds/click.wav');
     if (gManualMode.isOn || gManualMode.minesCount < gLevel.mines) {
-        gManualMode = resetManualMode(gManualMode);
+        gManualMode = resetManualMode(gLevel);
         showMsgModal('Manual Placement Cacelled');
         return;
     }
-
+    
     elButton.classList.add('pressed');
     var elBoard = document.querySelector('.board');
     elBoard.classList.add('mines-mode');
@@ -197,12 +197,13 @@ function manualyPlacMines(elButton) {
 }
 
 function collectMinesPositions(i, j) {
-
     var isExist = checkIfPosExist(i, j);
     if (isExist) return;
 
+    playSound('../sounds/boop.wav')
+
     gManualMode.minesCount--;
-    gManualMode = updateManualMinesCount(gManualMode);
+    gManualMode = updateManualMinesButton(gManualMode);
 
     gManualMode.positions.push({ i, j });
     gManualMode.isOn = gManualMode.minesCount > 0;
@@ -217,7 +218,8 @@ function checkIfPosExist(posI, posJ) {
     var positions = gManualMode.positions;
     for (var i = 0; i < positions.length; i++) {
         if (positions[i].i === posI && positions[i].j === posJ) {
-            showMsgModal('Position already taken!');
+            setTimeout(showMsgModal, 50, 'Position already taken!');
+
             return true;
         }
     }
@@ -231,20 +233,22 @@ function turnOffManualHighlights() {
     elBoard.classList.remove('mines-mode');
 }
 
-function updateManualMinesCount(manualMode) {
+function updateManualMinesButton(manualMode) {
     var elManualButtonSpan = document.querySelector('.manual-mines span');
     elManualButtonSpan.innerText = manualMode.minesCount;
 
     return manualMode;
 }
 
-function resetManualMode(manualMode) {
-    manualMode = {
-        minesCount: gLevel.mines,
+function resetManualMode(level) {
+    var manualMode = {
+        minesCount: level.mines,
         isOn: false,
         positions: [],
     };
-    manualMode = updateManualMinesCount(manualMode);
+    manualMode = updateManualMinesButton(manualMode);
     turnOffManualHighlights();
     return manualMode;
 }
+
+

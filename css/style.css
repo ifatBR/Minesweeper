@@ -11,7 +11,8 @@ body {
 }
 
 .main-container {
-    width: 1000px;
+    width: 1250px;
+    height: 750px;
     margin: 0 auto;
 }
 
@@ -19,17 +20,75 @@ body {
 .board-area {
     display: inline-block;
     height: 350px;
+    width: 400px;
+    /* background-color: brown; */
 }
+
 .board-area {
     width: 400px;
 }
+
+.instructions-area {
+    widows: 400px;
+    /* display:none; */
+}
+
+.instructions-area .extra{
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    /* border: 2px solid rgba(166, 194, 233, 0.5); */
+    background-color: rgba(204, 230, 255, 0.7);
+    box-shadow: 0 0 20px 7px white, 0 0 25px 7px white;
+    font-size: 25px;
+}
+
+.instructions {
+    position: absolute;
+    width: 550px;
+    height: 700px;
+    top: 10px;
+    right: 50px;
+    padding: 10px 20px;
+    font-family: 'Architects Daughter', cursive;
+    font-size: 20px;
+    /* background-color:  rgba(197, 223, 248, 0.85); */
+    background-image: linear-gradient(-40deg, rgba(197, 223, 248, 0.9), rgba(177, 216, 253, 0.8));
+    border-radius: 20px;
+    border: 3px solid rgb(206, 231, 255);
+    box-shadow: 0 0 20px 7px white;
+}
+.instructions span.underline {
+    text-decoration: underline;
+}
+.instructions span {
+    text-shadow: 3px 3px 5px white, -3px -3px 5px white, 1px 1px 10px white, 1px 1px 20px white, -1px -1px 25px white;
+}
+
+.instructions button {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    border-radius: 5px;
+    background-color:  rgb(222, 237, 252);
+    border: 3px solid rgb(127, 157, 185);
+    font-weight: bold;
+    box-shadow:0 0 7px 7px white;
+
+}
+
+.instructions h4 {
+    font-size: 25px;
+    margin: 10px;
+}
+
 .menu {
     background-image: linear-gradient(-40deg, rgba(197, 223, 248, 0.8), rgba(206, 231, 255, 0.4));
     width: 300px;
     height: 350px;
     position: relative;
     top: 280px;
-    right: 50px;
+    right: -50px;
     border-radius: 10px;
     box-shadow: 0 0 20px 7px white;
 }
@@ -67,9 +126,9 @@ body {
     background-color: rgba(66, 54, 107, 0.295);
 }
 
-.smiley:active {
+.smiley:active, .instructions button:active {
     background-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 5px 5px rgb(124, 179, 255, 0.5) inset, -2px -2px rgb(124, 179, 255, 0.5) inset, 0 0 7px 7px white;
+    box-shadow: 5px 5px 3px rgb(124, 179, 255, 0.5) inset, -2px -2px rgb(124, 179, 255, 0.5) inset, 0 0 7px 7px white;
 }
 
 .board {
@@ -136,17 +195,38 @@ button:focus {
     background-color: red;
 }
 
+
+.explosion {
+    background-image: radial-gradient(circle, rgba(255, 0, 0, 0.9) 5%, rgba(255, 72, 0, 0.877) 30%, rgba(252, 241, 84, 0.925));
+    box-shadow: 0 0 15px 7px rgba(255, 170, 73, 0.7);
+    animation-name: example;
+    animation-duration: 0.4s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes example {
+    0% {
+        background-image: radial-gradient(circle, rgba(255, 0, 0, 0.9) 15%, rgba(255, 170, 73, 0.8) 80%, rgba(252, 241, 84, 0.925));
+        box-shadow: 0 0 15px 7px rgba(255, 24, 184, 0.7);
+    }
+    33% {
+        background-image: radial-gradient(circle, rgba(255, 0, 0, 0.9) 25%, rgba(255, 170, 73, 0.8) 80%, rgba(255, 243, 73, 0.8));
+        box-shadow: 0 0 20px 10px rgba(255, 170, 73, 0.7);
+    }
+    66% {
+        background-image: radial-gradient(circle, rgba(241, 0, 0, 0.966) 30%, rgba(255, 170, 73, 0.9) 90%, rgba(255, 170, 73, 0.8));
+        box-shadow: 0 0 25px 13px rgba(255, 170, 73, 0.7);
+    }
+    100% {
+        background-image: radial-gradient(circle, rgba(241, 0, 0, 0.966) 30%, rgba(241, 0, 0, 0.9) 90%, rgba(241, 0, 0, 0.8));
+        box-shadow: 0 0 20px 7px rgba(255, 0, 0, 0.7);
+    }
+}
+
 .modals {
     position: relative;
     left: 430px;
     top: 250px;
-}
-.boom {
-    position: absolute;
-    color: red;
-    font-size: 50px;
-    font-family: 'Architects Daughter', cursive;
-    transform: rotate(-20deg);
 }
 
 .msg {
@@ -158,6 +238,7 @@ button:focus {
 
     font-size: 40px;
     font-family: 'Architects Daughter', cursive;
+    z-index: 10;
 }
 
 .safe-click {
@@ -189,6 +270,23 @@ button:focus {
     width: 270px;
     margin-left: 15px;
 }
+
+.sound-on {
+    display: block;
+    margin-left: 350px;
+    background-image: url('../img/soundOn.png');
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    width: 50px;
+    height: 40px;
+}
+
+.sound-off {
+    background-image: url('../img/soundOff2.png');
+}
+
 .extra:active {
     box-shadow: 3px 3px rgb(124, 179, 255, 0.5) inset, 0 0 7px 7px rgba(255, 255, 255, 0.9);
     background-color: rgba(255, 255, 255, 0.308);
@@ -240,7 +338,8 @@ button:focus {
     font-size: 25px;
 }
 
-.hints ul, .lives ul {
+.hints ul,
+.lives ul {
     display: inline;
     margin-left: 10px;
 }

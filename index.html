@@ -2,8 +2,11 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <link rel="shortcut icon" href="#" />
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Minesweeper</title>
+
         <link rel="stylesheet" href="css/style.css" />
     </head>
     <body onload="initGame()">
@@ -18,7 +21,7 @@
                             <li><button class="hint" onclick="showHint(this)">❔</button></li>
                         </ul>
                     </div>
-                    <div class="lives">
+                    <div class="lives" title="How many tries you have">
                         <h3 class="lable">Lives</h3>
                         <ul>
                             <li class="live"></li>
@@ -28,8 +31,10 @@
                     </div>
 
                     <div class="extras">
-                        <button class="undo extra" onclick="undo()">Undo</button>
-                        <button class="safe-click extra" onclick="safeClick()">Safe-Clicks: <span>3</span></button>
+                        <button class="undo extra" onclick="undo()" title="Undo one step back">Undo</button>
+                        <button class="safe-click extra" onclick="safeClick()">
+                            Safe-Clicks: <span>3</span>
+                        </button>
                     </div>
                     <button class="manual-mines extra" onclick="manualyPlacMines(this)">Manually Place Mines: <span>2</span></button>
                 </div>
@@ -37,17 +42,14 @@
 
             <div class="board-area">
                 <div class="modals">
-                    <div class="boom hidden-modal">
-                        <h3>BOOM!!!</h3>
-                    </div>
-
                     <div class="msg hidden-modal">
-                        <h3>First Click is Always Safe</h3>
+                        <h3></h3>
                     </div>
                 </div>
-                <div class="time timer">Time: <span>000</span></div>
-                <div class="time best-score">Best Score: <span>000</span></div>
-                <button class="smiley" onclick="initGame()"></button>
+                <div class="utils"><button class="sound-on extra" onclick=" gameSoundToggle(this)" title="Sounds on/off"></button></div>
+                <div class="time timer" title="Your score">Time: <span>000</span></div>
+                <div class="time best-score" title="Best score for this level">Best Score: <span>000</span></div>
+                <button class="smiley" onclick="restartGame()" title="Restart"></button>
                 <div class="difficulty">
                     <ul>
                         <li><button class="levels" onclick="changeLevel(0)">Beginner</button></li>
@@ -61,7 +63,34 @@
                     </table>
                 </div>
             </div>
-        </div> 
+            <div class="instructions-area">
+                <button class="extra" onclick="showInstructions()">Instructions</button>
+                <div class="instructions hidden-modal">
+                    <h4>Instructions</h4>
+                    <button onclick="hideInstructions()">X</button>
+                    <p><span class="underline">The goal-</span><span> reveal all cells and mark all mines.</span><br/><br/>
+                        <span>Left click</span>- reveals a cell.<br/>
+                <span>Reight click</span>- marks a cell so you can't click it.<br/>
+                You can click again to un-mark it.<br/>
+                <span>Snowman</span>- click the snowman to restart.<br/><br/>
+                <span class="underline">Cell types:</span><br/>
+                <span>Empty</span>- safe to click, first cell is always empty.<br/>
+                <span>Number</span>- safe to click. Indicates how many mine cells are around it (pependicular or diagonal).<br/>
+                <span>Mine</span>- left clikc- boom! you loose a life. Figure out where they are and mark them with right click.<br/><br/>
+                <span class="underline">Extra fitures:</span><br/>
+                <span>Hint</span>- press a '?' and a cell on the board to reveal it's area for 1 sec.<br/>
+                <span>Lives</span>- shows you how many lives you have left.<br/>
+                <span>Undo</span>- undo one step back.<br/>
+                <span>Safe click</span>- highlights a cell that is safe to click.<br/>
+                <span>Manually place mines</span>- Befor eyou start a game you can choose to place the mines yourself.<br/><br/>
+                <!-- <span>Enjoy!</span><br/> -->
+                
+           </p>
+
+                </div>
+
+            </div>
+        </div>
         <script src="js/functions.js"></script>
         <script src="js/main.js"></script>
         <script src="js/bonuses.js"></script>
