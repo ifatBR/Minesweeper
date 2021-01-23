@@ -2,7 +2,6 @@
 
 function showHint(elHintButton) {
     if (gGame.isShowHint || !gGame.isOn) return;
-    // playSound('../sounds/ding.wav')
     playSound('ding-sound');
     elHintButton.classList.add('highligt-text');
     elHintButton.innerText = '❓';
@@ -23,7 +22,6 @@ function revealHintCells(cellI, cellJ) {
             revealCell(elCurrCell, i, j, false);
         }
     }
-    // playSound('../sounds/magic2.mp3');
     playSound('magic2-sound');
 
     setTimeout(hideHint, 1000);
@@ -107,7 +105,6 @@ function expandShown(cellI, cellJ) {
 
 function undo() {
     if (!gUndos || !gGame.isOn) return;
-    // playSound('../sounds/swoosh.wav');
     playSound('woosh-sound');
     var lastSteps = gUndos[0].length ? gUndos.pop() : gUndos;
     for (var i = 0; i < lastSteps.length; i++) {
@@ -135,7 +132,6 @@ function safeClick() {
         return;
     }
 
-    // playSound('../sounds/magic.wav');
     playSound('magic-sound');
     gGame.isOn = false;
     gGame.safeClicks--;
@@ -187,7 +183,6 @@ function updateSafeClick() {
 function manualyPlacMines(elButton) {
     if (gTimerInterval || !gGame.isOn) return;
 
-    // playSound('../sounds/click.wav');
     playSound('click-sound');
 
     if (gManualMode.isOn || gManualMode.minesCount < gLevel.mines) {
@@ -206,7 +201,6 @@ function collectMinesPositions(i, j) {
     var isExist = checkIfPosExist(i, j);
     if (isExist) return;
 
-    // playSound('../sounds/boop.wav');
     playSound('boop-sound');
 
     gManualMode.minesCount--;

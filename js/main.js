@@ -174,7 +174,6 @@ function cellClicked(elCell, i, j) {
     if (currCell.isMine) {
         mineClicked(elCell, i, j);
     } else {
-        // playSound('../sounds/pop.mp3');
         playSound('pop-sound');
         gGame.shownCount++;
 
@@ -204,8 +203,7 @@ function revealCell(elCell, i, j, isChangeStat) {
 }
 
 function mineClicked(elCell, i, j) {
-    // playSound('../sounds/boom4.wav');
-    document.getElementById('boom-sound').play();
+    playSound('boom-sound');
     looseLife();
     elCell.classList.add('exploded');
     var isMoreLives = checkLives(elCell, i, j);
@@ -254,7 +252,6 @@ function cellMarked(elCell, event, i, j) {
     var currCell = gBoard[i][j];
     if (gManualMode.isOn || currCell.isShown || !gGame.isOn) return;
 
-    // playSound('../sounds/pop2.wav');
     playSound('pop2-sound');
     gUndos.push([{ i, j }]);
     if (!gTimerInterval) firstCellClickedActions(i, j);
@@ -279,8 +276,6 @@ function checkGameOver() {
 
 function gameOver(isWin) {
     var gameOverClass = isWin ? 'win-smiley' : 'loose-smiley';
-    // var gameOverSound = '../sounds/';
-    // gameOverSound += isWin ? 'yes.wav' : 'looser.wav';
     var gameOverSound = isWin ? 'yes-sound' : 'looser-sound';
     setTimeout(playSound, 600, gameOverSound);
 
@@ -320,7 +315,6 @@ function changeLevel(lvlIdx) {
     ];
     gLevel = levels[lvlIdx];
     gLvlBestScoreKey = `lvl-${lvlIdx}-BestScore`;
-    // playSound('../sounds/rattle.wav');
     playSound('shuffle-sound');
 
     initGame();
@@ -365,11 +359,8 @@ function resetSmiley() {
     elSmiley.classList.remove('win-smiley', 'loose-smiley');
 }
 
-// function playSound(sound) {
 function playSound(elmId) {
     if (!gSoundOn) return;
-    // var aud = new Audio(sound);
-    // aud.play();
     document.getElementById(elmId).play();
 }
 
@@ -379,7 +370,6 @@ function stopSound(sound) {
 }
 
 function gameSoundToggle(elButton) {
-    // playSound('../sounds/click.wav');
     document.getElementById('click-sound').play();
 
     elButton.classList.toggle('sound-off');
@@ -387,14 +377,12 @@ function gameSoundToggle(elButton) {
 }
 
 function restartGame() {
-    // playSound('../sounds/rattle.wav');
     playSound('shuffle-sound');
 
     initGame();
 }
 
 function showInstructions() {
-    // playSound('../sounds/click.wav');
     playSound('click-sound');
 
     var elInstructions = document.querySelector('.instructions');
@@ -402,7 +390,8 @@ function showInstructions() {
 }
 
 function hideInstructions() {
-    playSound('../sounds/click.wav');
+    playSound('click-sound');
+
 
     var elInstructions = document.querySelector('.instructions');
     elInstructions.classList.add('hidden-modal');
