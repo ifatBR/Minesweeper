@@ -181,7 +181,7 @@ function updateSafeClick() {
 }
 
 function manualyPlacMines(elButton) {
-    if (gTimerInterval) return;
+    if (gTimerInterval || !gGame.isOn) return;
     
     playSound('../sounds/click.wav');
     if (gManualMode.isOn || gManualMode.minesCount < gLevel.mines) {
